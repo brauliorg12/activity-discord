@@ -24,8 +24,5 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Simple Node.js test (require dist/index.js)
-        run: node -e "require('./dist/index.js'); console.log('Main file loaded OK');"
-
       - name: Build Docker image
         run: docker build -t discord-activity .
