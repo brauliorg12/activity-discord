@@ -5,5 +5,7 @@ export interface VoiceActivityCardData {
   action: 'entrada' | 'salida' | 'cambio';
   color: number;
   channelName: string;
+  channelId?: string;
+  guildId?: string;
   oldChannelName?: string;
 }
