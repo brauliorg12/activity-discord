@@ -10,3 +10,7 @@ activity-counts.json
 .DS_Store
 docker-compose.override.yml
 coverage/
+
+# Data
+data/
+logs/
