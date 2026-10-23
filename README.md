@@ -80,6 +80,7 @@ O manualmente:
 Al invitar el bot, asegúrate de incluir los siguientes permisos:
 
 **Permisos:**
+
 - `View Channels` (Ver canales)
 - `Send Messages` (Enviar mensajes)
 - `Embed Links` (Insertar enlaces)
@@ -115,11 +116,11 @@ ENABLE_SHARDING=true
 
 ## Comandos
 
-| Comando | Descripción |
-|---------|-------------|
-| `/ping` | Verifica si el bot está activo |
-| `/guilds` | Lista todos los servidores y sus canales configurados |
-| `/setchannel #canal` | Configura el canal de texto para las tarjetas |
+| Comando              | Descripción                                           |
+| -------------------- | ----------------------------------------------------- |
+| `/ping`              | Verifica si el bot está activo                        |
+| `/guilds`            | Lista todos los servidores y sus canales configurados |
+| `/setchannel #canal` | Configura el canal de texto para las tarjetas         |
 
 ## Persistencia
 
@@ -175,6 +176,7 @@ discord-activity/
 ## Personalización
 
 Podés modificar los mensajes y colores de las tarjetas en:
+
 - `src/utils/send-voice-card.ts` - Tarjetas de voz
 - `src/cards/send-connection-card.ts` - Tarjeta de bienvenida
 
@@ -189,6 +191,58 @@ dist/
 data/
 logs/
 ```
+
+---
+
+---
+
+## Docker y despliegue (Portainer)
+
+La imagen se publica automáticamente en **GitHub Container Registry (GHCR)**
+con cada push a `main`:
+
+```
+ghcr.io/brauliorg12/activity-discord:latest
+```
+
+### Variables de entorno
+
+| Variable          | Obligatoria | Uso                                        |
+| ----------------- | ----------- | ------------------------------------------ |
+| `DISCORD_TOKEN`   | Sí          | Token del bot. Sin esto no arranca.        |
+| `CLIENT_ID`       | Sí          | Application ID (registrar slash commands). |
+| `ENABLE_SHARDING` | No          | `true` para sharding (2500+ servidores).   |
+
+### Datos persistentes
+
+El bot guarda estado en `/app/data` (`guilds.json`, `voice-connections.json`) y
+logs en `/app/logs`. Montá carpetas ahí para no perderlos entre versiones.
+
+### Ejemplo con docker-compose
+
+```yaml
+services:
+  discord-activity:
+    image: ghcr.io/brauliorg12/activity-discord:latest
+    container_name: discord-activity
+    restart: unless-stopped
+    init: true
+    environment:
+      TZ: America/Argentina/Buenos_Aires
+      NODE_ENV: production
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      CLIENT_ID: ${CLIENT_ID}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+```
+
+### Deploy en Portainer
+
+1. **Stacks → Add stack** → nombre `discord-activity`.
+2. Pegar el yml en **Web editor**.
+3. Cargar las variables `DISCORD_TOKEN` y `CLIENT_ID`.
+4. **Deploy the stack**.
 
 ---
 
